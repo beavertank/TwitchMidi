@@ -50,8 +50,7 @@
       let output = WebMidi.outputs[0];
       let channel = output.channels[1];
       for (var i = 0; i < 10; i++){
-        channel.playNote("C3", {duration: 1000});
-        sleep(1000);
+        sleep(1000).then(()channel.playNote("C3", {duration: 1000});]);
         }
    }
     </script>
