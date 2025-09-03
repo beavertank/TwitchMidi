@@ -16,17 +16,16 @@
         .enable()
         .then(onEnabled)
         .catch(err => alert(err));
-  
-      try {
-  // Prompt user to access MIDI devices.
-  const access = await navigator.requestMIDIAccess();
-  // Get lists of available MIDI controllers...
 
-} catch (error) {
-  if (error.name === "SecurityError") {
-    // The website is not allowed to control and reprogram MIDI devices.
-  }
-}
+      dictionary MidiPermissionDescriptor : PermissionDescriptor {
+          boolean sysex = false;
+      };
+
+      partial interface Navigator {
+          [SecureContext]
+          Promise <MIDIAccess> requestMIDIAccess(optional MIDIOptions options = {});
+      };
+      
       function onEnabled() {
 
         if (WebMidi.inputs.length < 1) {
