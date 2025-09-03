@@ -49,7 +49,7 @@
    function play(){
       let output = WebMidi.outputs[0];
       let channel = output.channels[1];
-      for (var i = 0; i < 10; i++){
+      for (var i = 0; i >= 0; i++){
         channel.playNote("C3", {duration: 1000});
         }
    }
