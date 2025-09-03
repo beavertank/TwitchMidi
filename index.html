@@ -1,64 +1,146 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
-  <head>
-
+<head>
     <meta charset="UTF-8">
-    <title>WebMidi.js Quick Start</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web MIDI Note Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
 
-    <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700">
+        <h1 class="text-3xl font-bold mb-2 text-blue-400">Web MIDI Player</h1>
+        <p class="text-gray-400 mb-6">Plays a random note every second.</p>
 
-    <script type="module">
+        <div id="status" class="mb-6 p-4 rounded-lg bg-gray-700 text-gray-300">
+            Initializing...
+        </div>
 
-      // Enable WebMidi.js and trigger the onEnabled() function when ready.
-      WebMidi
-        .enable()
-        .then(onEnabled)
-        .then(play)
-        .catch(err => alert(err));
+        <button id="toggleButton" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 btn-glow">
+            Start Playing
+        </button>
+    </div>
 
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    <script>
+        const statusDiv = document.getElementById('status');
+        const toggleButton = document.getElementById('toggleButton');
 
-     
-      function onEnabled() {
+        let midiOutput = null;
+        let noteInterval = null;
+        let isPlaying = false;
 
-        if (WebMidi.inputs.length < 1) {
-          document.body.innerHTML+= "No device detected.";
+        // --- MIDI constants ---
+        const NOTE_ON = 0x90;  // 144
+        const NOTE_OFF = 0x80; // 128
+        const VELOCITY = 100;   // How hard the note is played (0-127)
+        const NOTE_DURATION = 200; // milliseconds
+
+        // Function to update the status message
+        function updateStatus(message, isError = false) {
+            statusDiv.textContent = message;
+            statusDiv.className = `mb-6 p-4 rounded-lg ${isError ? 'bg-red-900 text-red-300' : 'bg-gray-700 text-gray-300'}`;
+        }
+
+        // Check for Web MIDI API support
+        if (navigator.requestMIDIAccess) {
+            updateStatus('Requesting MIDI access...');
+            navigator.requestMIDIAccess()
+                .then(onMIDISuccess, onMIDIFailure);
         } else {
-          WebMidi.inputs.forEach((device, index) => {
-            document.body.innerHTML+= `${index}: ${device.name} <br>`;
-          });
+            updateStatus('Web MIDI API is not supported in this browser.', true);
+            toggleButton.disabled = true;
         }
 
-      //const mySynth = WebMidi.outputs[0];
-      let output = WebMidi.outputs[0];
-      let channel = output.channels[1];
-        
-          // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
+        function onMIDISuccess(midiAccess) {
+            // Get the first available MIDI output device
+            const outputs = midiAccess.outputs.values();
+            const outputIterator = outputs.next();
 
-        //mySynth.
-        //mySynth.channels[1].addListener("noteon", e => {
-        //  document.body.innerHTML+= `${e.note.name} <br>`;
-        //});
+            if (outputIterator.value) {
+                midiOutput = outputIterator.value;
+                updateStatus(`Connected to: ${midiOutput.name}`);
+                toggleButton.disabled = false;
+            } else {
+                updateStatus('No MIDI output devices found.', true);
+                toggleButton.disabled = true;
+            }
 
-      }
-
-   function play(){
-      let output = WebMidi.outputs[0];
-      let channel = output.channels[1];
-      for (var i = 0; i < 10; i++){
-        sleep(1000).then(() => { channel.playNote("C3", {duration: 1000});});
+             // Listen for changes in MIDI device state
+            midiAccess.onstatechange = (event) => {
+                if (event.port.type === "output" && event.port.state === "disconnected" && midiOutput && event.port.id === midiOutput.id) {
+                    stopPlaying();
+                    midiOutput = null;
+                    toggleButton.disabled = true;
+                    updateStatus(`Device disconnected: ${event.port.name}`, true);
+                } else if (event.port.type === "output" && event.port.state === "connected" && !midiOutput) {
+                     midiOutput = event.port;
+                     toggleButton.disabled = false;
+                     updateStatus(`Device connected: ${midiOutput.name}`);
+                }
+            };
         }
-   }
+
+        function onMIDIFailure(msg) {
+            updateStatus(`Failed to get MIDI access: ${msg}`, true);
+            toggleButton.disabled = true;
+        }
+
+        // Function to play a single note
+        function playNote() {
+            if (!midiOutput) return;
+
+            // Pick a random note from C4 (60) to C5 (72)
+            const note = Math.floor(Math.random() * 13) + 60;
+
+            // Send Note On message
+            midiOutput.send([NOTE_ON, note, VELOCITY]);
+            console.log(`Note On: ${note}`);
+
+            // Schedule Note Off message
+            midiOutput.send([NOTE_OFF, note, 0], window.performance.now() + NOTE_DURATION);
+            console.log(`Note Off: ${note} (scheduled)`);
+        }
+
+        function startPlaying() {
+            if (isPlaying) return;
+            isPlaying = true;
+            toggleButton.textContent = 'Stop Playing';
+            toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
+            
+            // Play a note immediately, then start the interval
+            playNote();
+            noteInterval = setInterval(playNote, 1000);
+        }
+
+        function stopPlaying() {
+            if (!isPlaying) return;
+            isPlaying = false;
+            toggleButton.textContent = 'Start Playing';
+            toggleButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+            toggleButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+
+            clearInterval(noteInterval);
+            noteInterval = null;
+        }
+
+        toggleButton.addEventListener('click', () => {
+            if (isPlaying) {
+                stopPlaying();
+            } else {
+                startPlaying();
+            }
+        });
+
     </script>
-
-  </head>
-
-  <body>
-    <h1>WebMidi.js Quick Start</h1>
-  </body>
-
+</body>
 </html>
