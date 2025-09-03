@@ -33,7 +33,7 @@
           });
         }
 
-       const mySynth = WebMidi.outputs[0];
+      //const mySynth = WebMidi.outputs[0];
       let output = WebMidi.outputs[0];
       let channel = output.channels[1];
         
@@ -47,7 +47,8 @@
       }
 
    function play(){
-      
+      let output = WebMidi.outputs[0];
+      let channel = output.channels[1];
       for (let step = 0; step <10; step++){
         channel.playNote("C3", {duration: 1000});
         sleep(1200);
