@@ -17,14 +17,7 @@
         .then(onEnabled)
         .catch(err => alert(err));
 
-      dictionary MidiPermissionDescriptor : PermissionDescriptor {
-          boolean sysex = false;
-      };
-
-      partial interface Navigator {
-          [SecureContext]
-          Promise <MIDIAccess> requestMIDIAccess(optional MIDIOptions options = {});
-      };
+      requestMidiAccess()
       
       function onEnabled() {
 
