@@ -35,7 +35,17 @@
         const mySynth = WebMidi.outputs[0];
         let output = WebMidi.outputs[0];
         let channel = output.channels[1];
-        for (let step = 0; step <10; step++){
+        
+          // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
+
+        //mySynth.
+        //mySynth.channels[1].addListener("noteon", e => {
+        //  document.body.innerHTML+= `${e.note.name} <br>`;
+        //});
+
+      }
+
+      for (let step = 0; step <10; step++){
         channel.playNote("C3", {duration: 1000});
         sleep(1200);
         channel.playNote("E3", {duration: 1000});
@@ -50,15 +60,6 @@
         sleep(1200);
           channel.playNote("G3", {duration: 1000});
         }
-          // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
-
-        //mySynth.
-        //mySynth.channels[1].addListener("noteon", e => {
-        //  document.body.innerHTML+= `${e.note.name} <br>`;
-        //});
-
-      }
-
     </script>
 
   </head>
