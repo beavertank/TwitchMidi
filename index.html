@@ -16,6 +16,11 @@
         .enable()
         .then(onEnabled)
         .catch(err => alert(err));
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
       
       function onEnabled() {
 
@@ -30,13 +35,13 @@
         const mySynth = WebMidi.outputs[0];
         let output = WebMidi.outputs[0];
         let channel = output.channels[1];
-        channel.playNote("C3", {duration: 100});
-        channel.playNote("E3", {duration: 100});
-        channel.playNote("G3", {duration: 100});
-        channel.playNote("A4", {duration: 100});
-        channel.playNote("E3", {duration: 100});
-        channel.playNote("C3", {duration: 100});
-        channel.playNote("G3", {duration: 100});
+        channel.playNote("C3", {duration: 1000});
+        sleep(1200).then(() =>  {  channel.playNote("E3", {duration: 1000});};
+        sleep(1200).then(() =>  {  channel.playNote("G3", {duration: 1000});};
+        sleep(1200).then(() =>  {  channel.playNote("A4", {duration: 1000});};
+        sleep(1200).then(() =>  {  channel.playNote("E3", {duration: 1000});};
+        sleep(1200).then(() =>  {  channel.playNote("C3", {duration: 1000});};
+        sleep(1200).then(() =>  {  channel.playNote("G3", {duration: 1000});};
         // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
 
         //mySynth.
