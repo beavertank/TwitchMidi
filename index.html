@@ -37,12 +37,18 @@
         let channel = output.channels[1];
         for (let step = 0; step <10; step++){
         channel.playNote("C3", {duration: 1000});
-        sleep(1200).then(() =>  {  channel.playNote("E3", {duration: 1000});});
-        sleep(1200).then(() =>  {  channel.playNote("G3", {duration: 1000});});
-        sleep(1200).then(() =>  {  channel.playNote("A4", {duration: 1000});});
-        sleep(1200).then(() =>  {  channel.playNote("E3", {duration: 1000});});
-        sleep(1200).then(() =>  {  channel.playNote("C3", {duration: 1000});});
-        sleep(1200).then(() =>  {  channel.playNote("G3", {duration: 1000});});
+        sleep(1200);
+        channel.playNote("E3", {duration: 1000});
+        sleep(1200);
+         channel.playNote("G3", {duration: 1000});
+        sleep(1200);
+          channel.playNote("A4", {duration: 1000});
+        sleep(1200);
+          channel.playNote("E3", {duration: 1000});
+        sleep(1200);
+          channel.playNote("C3", {duration: 1000});
+        sleep(1200);
+          channel.playNote("G3", {duration: 1000});
         }
           // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
 
