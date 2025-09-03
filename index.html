@@ -15,13 +15,14 @@
       WebMidi
         .enable()
         .then(onEnabled)
+        .then(play)
         .catch(err => alert(err));
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-      
+     
       function onEnabled() {
 
         if (WebMidi.inputs.length < 1) {
@@ -32,7 +33,9 @@
           });
         }
 
-       
+       const mySynth = WebMidi.outputs[0];
+      let output = WebMidi.outputs[0];
+      let channel = output.channels[1];
         
           // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
 
@@ -43,9 +46,7 @@
 
       }
 
-   const mySynth = WebMidi.outputs[0];
-    let output = WebMidi.outputs[0];
-    let channel = output.channels[1];
+   function play(){
       
       for (let step = 0; step <10; step++){
         channel.playNote("C3", {duration: 1000});
@@ -62,6 +63,7 @@
         sleep(1200);
           channel.playNote("G3", {duration: 1000});
         }
+   }
     </script>
 
   </head>
