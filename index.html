@@ -98,8 +98,11 @@
         function playNote() {
             if (!midiOutput) return;
 
-            // Pick a random note from C4 (60) to C5 (72)
-            const note = Math.floor(Math.random() * 13) + 60;
+            // Define the notes of a C major scale from C4 to C5
+            const cMajorScale = [60, 62, 64, 65, 67, 69, 71, 72]; // C, D, E, F, G, A, B, C
+            
+            // Pick a random note from the scale
+            const note = cMajorScale[Math.floor(Math.random() * cMajorScale.length)];
 
             // Send Note On message
             midiOutput.send([NOTE_ON, note, VELOCITY]);
@@ -144,3 +147,4 @@
     </script>
 </body>
 </html>
+
