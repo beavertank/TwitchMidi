@@ -27,12 +27,16 @@
           });
         }
 
-        const mySynth = WebMidi.inputs[0];
+        const mySynth = WebMidi.outputs[0];
+        let output = WebMidi.outputs[0];
+        let channel = output.channels[1];
+        channel.playNote("C3");
         // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
 
-        mySynth.channels[1].addListener("noteon", e => {
-          document.body.innerHTML+= `${e.note.name} <br>`;
-        });
+        mySynth.
+        //mySynth.channels[1].addListener("noteon", e => {
+        //  document.body.innerHTML+= `${e.note.name} <br>`;
+        //});
 
       }
 
