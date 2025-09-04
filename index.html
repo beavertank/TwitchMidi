@@ -27,7 +27,7 @@
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center h-screen">
 
-    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700" style="transition: border-color 0.1s ease-in-out;">
         <h1 class="text-3xl font-bold mb-2 text-blue-400">Web MIDI Player</h1>
         <p class="text-gray-400 mb-6">Plays random notes from the selected scale.</p>
 
@@ -109,6 +109,7 @@
         const octaveValue = document.getElementById('octaveValue');
         const bpmSlider = document.getElementById('bpmSlider');
         const bpmValue = document.getElementById('bpmValue');
+        const mainContainer = document.querySelector('.bg-gray-800');
 
         let midiAccess = null;
         let midiOutput = null;
@@ -117,6 +118,12 @@
         let lastNotePlayed = null;
         let currentVelocity = 100;
         
+        // --- Visualizer Data ---
+        const channelColors = [
+            '#ef476f', '#ffd166', '#06d6a0', '#118ab2', '#073b4c', '#f78c6b', '#82d7d7', '#6e9075', 
+            '#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d', '#43aa8b', '#577590', '#6a4c93'
+        ];
+
         // --- Music Theory Data ---
         const KEYS = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
         const MODES = {
@@ -207,6 +214,15 @@
             toggleButton.textContent = 'MIDI Access Failed';
         }
         
+        function visualizeNote(channel) {
+            if (!mainContainer) return;
+            // The original color is set by the `border-gray-700` class. We override it briefly.
+            mainContainer.style.borderColor = channelColors[channel % channelColors.length];
+            setTimeout(() => {
+                mainContainer.style.borderColor = ''; // Resets to the stylesheet color from Tailwind
+            }, 150); // Flash for 150ms
+        }
+
         function playNote() {
             if (!midiOutput) return;
 
@@ -266,6 +282,7 @@
             // Send the note on all selected channels
             selectedChannelBoxes.forEach(box => {
                 const channel = parseInt(box.value, 10);
+                visualizeNote(channel); // Visual feedback for which channel is playing
                 const NOTE_ON = 0x90 + channel;
                 const NOTE_OFF = 0x80 + channel;
                 midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
@@ -360,4 +377,5 @@
     </script>
 </body>
 </html>
+
 
