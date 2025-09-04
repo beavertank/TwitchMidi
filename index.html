@@ -27,15 +27,15 @@
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center h-screen">
 
-    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700">
-        <h1 class="text-3xl font-bold mb-2 text-blue-400">Web MIDI Player</h1>
-        <p class="text-gray-400 mb-6">Plays random notes from the selected scale.</p>
-
-        <div id="status" class="mb-6 p-4 rounded-lg bg-gray-700 text-gray-300">
+        <div id="status" class="mb-6 p-4 rounded-lg bg-ray-700 text-gray-300">
             Initializing...
         </div>
 
         <div class="space-y-4 mb-6">
+            <div>
+                <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
+                <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+            </div>
             <div>
                 <label for="keySelector" class="block text-sm font-medium text-gray-400 text-left">Key</label>
                 <select id="keySelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
@@ -61,11 +61,13 @@
     <script>
         const statusDiv = document.getElementById('status');
         const toggleButton = document.getElementById('toggleButton');
+        const deviceSelector = document.getElementById('deviceSelector');
         const keySelector = document.getElementById('keySelector');
         const modeSelector = document.getElementById('modeSelector');
         const octaveSlider = document.getElementById('octaveSlider');
         const octaveValue = document.getElementById('octaveValue');
 
+        let midiAccess = null;
         let midiOutput = null;
         let noteInterval = null;
         let isPlaying = false;
@@ -121,30 +123,47 @@
             toggleButton.disabled = true;
         }
 
-        function onMIDISuccess(midiAccess) {
-            const outputs = midiAccess.outputs.values();
-            const outputIterator = outputs.next();
+        function populateDeviceDropdown() {
+            if (!midiAccess) return;
 
-            if (outputIterator.value) {
-                midiOutput = outputIterator.value;
-                updateStatus(`Connected to: ${midiOutput.name}`);
+            // Clear previous options
+            deviceSelector.innerHTML = '';
+            const outputs = midiAccess.outputs.values();
+            const outputDevices = Array.from(outputs);
+
+            if (outputDevices.length > 0) {
+                outputDevices.forEach(output => {
+                    const option = document.createElement('option');
+                    option.value = output.id;
+                    option.textContent = output.name;
+                     // If this was the previously selected device, keep it selected
+                    if (midiOutput && midiOutput.id === output.id) {
+                        option.selected = true;
+                    }
+                    deviceSelector.appendChild(option);
+                });
+                
+                // If no device was selected, or the selected one is gone, select the first one
+                const currentSelection = outputDevices.find(d => d.id === deviceSelector.value);
+                midiOutput = currentSelection || outputDevices[0];
+                
+                updateStatus(`Using device: ${midiOutput.name}`);
                 toggleButton.disabled = false;
+
             } else {
+                stopPlaying();
                 updateStatus('No MIDI output devices found.', true);
                 toggleButton.disabled = true;
+                midiOutput = null;
             }
+        }
+
+        function onMIDISuccess(ma) {
+            midiAccess = ma;
+            populateDeviceDropdown();
 
             midiAccess.onstatechange = (event) => {
-                if (event.port.type === "output" && event.port.state === "disconnected" && midiOutput && event.port.id === midiOutput.id) {
-                    stopPlaying();
-                    midiOutput = null;
-                    toggleButton.disabled = true;
-                    updateStatus(`Device disconnected: ${event.port.name}`, true);
-                } else if (event.port.type === "output" && event.port.state === "connected" && !midiOutput) {
-                     midiOutput = event.port;
-                     toggleButton.disabled = false;
-                     updateStatus(`Device connected: ${midiOutput.name}`);
-                }
+                populateDeviceDropdown();
             };
         }
 
@@ -210,6 +229,15 @@
                 stopPlaying();
             } else {
                 startPlaying();
+            }
+        });
+
+        deviceSelector.addEventListener('change', (event) => {
+            const selectedId = event.target.value;
+            const outputs = midiAccess.outputs.values();
+            midiOutput = Array.from(outputs).find(output => output.id === selectedId);
+            if (midiOutput) {
+                updateStatus(`Using device: ${midiOutput.name}`);
             }
         });
 
