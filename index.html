@@ -276,10 +276,23 @@
             const randomDuration = 125 + Math.random() * 3875;
             const noteOffTime = window.performance.now() + randomDuration;
 
+            // --- Glide (Portamento) Logic ---
+            const applyGlide = Math.random() <= 0.20;
+            const portamentoTime = applyGlide ? 127 : 0; // CC 5: 100% or 0%
+            const portamentoSwitch = applyGlide ? 127 : 0; // CC 65: On or Off
+
             selectedChannels.forEach((channelValue) => {
                 const channel = channelValue - 1;
+                // MIDI CC messages are sent on channel 0xB0 to 0xBF (176-191)
+                const CONTROL_CHANGE = 176 + channel;
                 const NOTE_ON = 144 + channel;
                 const NOTE_OFF = 128 + channel;
+
+                // Send Portamento Control Change messages *before* the Note On message
+                midiOutput.send([CONTROL_CHANGE, 65, portamentoSwitch]); // Portamento On/Off
+                midiOutput.send([CONTROL_CHANGE, 5, portamentoTime]);   // Portamento Time
+
+                // Send the note itself
                 midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
                 midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
             });
