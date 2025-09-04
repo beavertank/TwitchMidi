@@ -36,13 +36,15 @@
                 <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
                 <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
             </div>
-             <div>
-                <label for="leadChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Lead MIDI Channel</label>
-                 <select id="leadChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
-            </div>
-             <div>
-                <label for="chordChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Chord MIDI Channel</label>
-                <select id="chordChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+            <div class="flex space-x-4">
+                <div class="w-1/2">
+                    <label for="leadChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Lead MIDI Channel</label>
+                    <select id="leadChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+                </div>
+                <div class="w-1/2">
+                    <label for="chordChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Chord MIDI Channel</label>
+                    <select id="chordChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+                </div>
             </div>
             <div>
                 <label for="keySelector" class="block text-sm font-medium text-gray-400 text-left">Key</label>
@@ -397,4 +399,5 @@
     </script>
 </body>
 </html>
+
 
