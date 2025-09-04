@@ -37,54 +37,12 @@
                 <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
             </div>
              <div>
-                <label class="block text-sm font-medium text-gray-400 text-left mb-2">Lead MIDI Channel</label>
-                <div class="flex items-center mb-2 text-sm">
-                    <input type="checkbox" id="leadOmniChannel" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500">
-                    <label for="leadOmniChannel">Omni (All Channels)</label>
-                </div>
-                <div id="leadChannelSelector" class="grid grid-cols-8 gap-x-2 gap-y-2 text-sm text-left">
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="1" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="leadMidiChannel" value="16" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
-                </div>
+                <label for="leadChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Lead MIDI Channel</label>
+                 <select id="leadChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
             </div>
              <div>
-                <label class="block text-sm font-medium text-gray-400 text-left mb-2">Chord MIDI Channel</label>
-                <div class="flex items-center mb-2 text-sm">
-                    <input type="checkbox" id="chordOmniChannel" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500">
-                    <label for="chordOmniChannel">Omni (All Channels)</label>
-                </div>
-                <div id="chordChannelSelector" class="grid grid-cols-8 gap-x-2 gap-y-2 text-sm text-left">
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="1" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="chordMidiChannel" value="16" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
-                </div>
+                <label for="chordChannelSelector" class="block text-sm font-medium text-gray-400 text-left">Chord MIDI Channel</label>
+                <select id="chordChannelSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
             </div>
             <div>
                 <label for="keySelector" class="block text-sm font-medium text-gray-400 text-left">Key</label>
@@ -173,7 +131,28 @@
                 modeSelector.appendChild(option);
             });
         }
+        
+        function populateChannelDropdown(selectorId) {
+            const selector = document.getElementById(selectorId);
+            selector.innerHTML = ''; 
+
+            const omniOption = document.createElement('option');
+            omniOption.value = 'omni';
+            omniOption.textContent = 'Omni (All Channels)';
+            selector.appendChild(omniOption);
+
+            for (let i = 1; i <= 16; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Channel ${i}`;
+                selector.appendChild(option);
+            }
+            selector.value = '1'; // Default to channel 1
+        }
+        
         populateDropdowns();
+        populateChannelDropdown('leadChannelSelector');
+        populateChannelDropdown('chordChannelSelector');
 
         // --- MIDI Logic ---
         if (navigator.requestMIDIAccess) {
@@ -242,14 +221,24 @@
                     }
                 }
             }
-            return notes;
+            return notes.sort((a, b) => a - b); // Ensure notes are sorted
+        }
+
+        function getSelectedChannels(selectorId) {
+            const selector = document.getElementById(selectorId);
+            const selectedValue = selector.value;
+            if (selectedValue === 'omni') {
+                return Array.from({ length: 16 }, (_, i) => i + 1);
+            } else {
+                return [parseInt(selectedValue, 10)];
+            }
         }
 
         function playLeadNote() {
             if (!midiOutput) return;
 
-            const selectedChannelBoxes = document.querySelectorAll('#leadChannelSelector input[type="checkbox"]:checked');
-            if (selectedChannelBoxes.length === 0) return;
+            const selectedChannels = getSelectedChannels('leadChannelSelector');
+            if (selectedChannels.length === 0) return;
 
             // --- Velocity Logic ---
             if (Math.random() <= 0.30) {
@@ -276,8 +265,8 @@
             const randomDuration = 125 + Math.random() * 3875;
             const noteOffTime = window.performance.now() + randomDuration;
 
-            selectedChannelBoxes.forEach((box) => {
-                const channel = parseInt(box.value, 10) - 1;
+            selectedChannels.forEach((channelValue) => {
+                const channel = channelValue - 1;
                 const NOTE_ON = 144 + channel;
                 const NOTE_OFF = 128 + channel;
                 midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
@@ -288,26 +277,38 @@
         function playChord() {
             if (!midiOutput || lastNotePlayed === null) return;
 
-            const selectedChannelBoxes = document.querySelectorAll('#chordChannelSelector input[type="checkbox"]:checked');
-            if (selectedChannelBoxes.length === 0) return;
+            const selectedChannels = getSelectedChannels('chordChannelSelector');
+            if (selectedChannels.length === 0) return;
 
             const playableNotes = getPlayableNotes();
-            const rootIndex = playableNotes.indexOf(lastNotePlayed);
-            if (rootIndex === -1) return;
+            const fullScaleNoteCount = MODES[modeSelector.value].length;
 
-            const thirdNote = playableNotes[(rootIndex + 2) % playableNotes.length];
-            const fifthNote = playableNotes[(rootIndex + 4) % playableNotes.length];
-            const chordNotes = [lastNotePlayed, thirdNote, fifthNote];
+            const rootNoteAbsoluteIndex = playableNotes.indexOf(lastNotePlayed);
+            if (rootNoteAbsoluteIndex === -1) return;
 
-            const beats = 2 + Math.random() * 2; // Random duration: 2 to 4 beats
+            // Find the scale degree (e.g., 0 for root, 1 for second) of the last lead note
+            const rootNoteDegree = rootNoteAbsoluteIndex % fullScaleNoteCount;
+            
+            // Get only the notes from the bottom-most octave
+            const bottomOctaveNotes = playableNotes.slice(0, fullScaleNoteCount);
+
+            // Build the chord using notes from the bottom octave, based on the lead note's degree
+            const chordRoot = bottomOctaveNotes[rootNoteDegree];
+            const chordThird = bottomOctaveNotes[(rootNoteDegree + 2) % fullScaleNoteCount];
+            const chordFifth = bottomOctaveNotes[(rootNoteDegree + 4) % fullScaleNoteCount];
+            
+            const chordNotes = [chordRoot, chordThird, chordFifth].filter(n => n !== undefined);
+            if (chordNotes.length < 3) return; // Safeguard
+
+            // 80% chance for a 4-beat duration, 20% for 2-4 beats.
+            const beats = Math.random() < 0.8 ? 4 : 2 + Math.random() * 2;
             const durationMs = (60 / bpmSlider.value * 1000) * beats;
             const noteOffTime = window.performance.now() + durationMs;
             
-            // Use a slightly softer velocity for chords
             const chordVelocity = Math.max(50, Math.round(currentVelocity * 0.8));
 
-            selectedChannelBoxes.forEach(box => {
-                const channel = parseInt(box.value, 10) - 1;
+            selectedChannels.forEach(channelValue => {
+                const channel = channelValue - 1;
                 const NOTE_ON = 144 + channel;
                 const NOTE_OFF = 128 + channel;
 
@@ -392,35 +393,6 @@
         });
 
         document.getElementById('beatSelector').addEventListener('change', restartPlayerIfNeeded);
-
-        function setupChannelSelector(selectorId, omniId) {
-            const selector = document.getElementById(selectorId);
-            const checkBoxes = selector.querySelectorAll('input[type="checkbox"]');
-            const omniCheckbox = document.getElementById(omniId);
-
-            omniCheckbox.addEventListener('change', () => {
-                const isChecked = omniCheckbox.checked;
-                checkBoxes.forEach(box => {
-                    box.checked = isChecked;
-                    box.disabled = isChecked;
-                });
-                if (!isChecked) {
-                    const channel1 = selector.querySelector('input[value="1"]');
-                    if (channel1) channel1.checked = true;
-                }
-            });
-
-            selector.addEventListener('change', (event) => {
-                if (event.target.type === 'checkbox') {
-                    omniCheckbox.checked = false;
-                    const oneIsChecked = Array.from(checkBoxes).some(box => box.checked);
-                    if (!oneIsChecked) event.target.checked = true;
-                }
-            });
-        }
-        
-        setupChannelSelector('leadChannelSelector', 'leadOmniChannel');
-        setupChannelSelector('chordChannelSelector', 'chordOmniChannel');
 
     </script>
 </body>
