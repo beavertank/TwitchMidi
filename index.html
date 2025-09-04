@@ -40,6 +40,27 @@
                 <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
                 <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
             </div>
+             <div>
+                <label class="block text-sm font-medium text-gray-400 text-left mb-2">MIDI Channel</label>
+                <div id="channelSelector" class="grid grid-cols-8 gap-x-2 gap-y-2 text-sm text-left">
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="0" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="1" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
+                </div>
+            </div>
             <div>
                 <label for="keySelector" class="block text-sm font-medium text-gray-400 text-left">Key</label>
                 <select id="keySelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
@@ -76,27 +97,6 @@
                     <div class="flex items-center"><input type="checkbox" id="beat6m" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label for="beat6m">6</label></div>
                 </div>
             </div>
-             <div>
-                <label class="block text-sm font-medium text-gray-400 text-left mb-2">MIDI Channel</label>
-                <div id="channelSelector" class="grid grid-cols-8 gap-x-2 gap-y-2 text-sm text-left">
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="0" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="1" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
-                </div>
-            </div>
         </div>
 
         <button id="toggleButton" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 btn-glow">
@@ -121,9 +121,6 @@
         let isPlaying = false;
         let lastNotePlayed = null;
         let currentVelocity = 100;
-
-        // --- MIDI constants ---
-        // Removed global constants, they are now defined in playNote() based on channel
         
         // --- Music Theory Data ---
         const KEYS = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
@@ -194,7 +191,7 @@
                 const currentSelection = outputDevices.find(d => d.id === deviceSelector.value);
                 midiOutput = currentSelection || outputDevices[0];
                 
-                updateStatus(`Using device: ${midiOutput.name}`);
+                updateStatus(`Ready. Select a device and press Start.`);
                 toggleButton.disabled = false;
 
             } else {
@@ -340,9 +337,6 @@
             const selectedId = event.target.value;
             const outputs = midiAccess.outputs.values();
             midiOutput = Array.from(outputs).find(output => output.id === selectedId);
-            if (midiOutput) {
-                updateStatus(`Using device: ${midiOutput.name}`);
-            }
         });
 
         octaveSlider.addEventListener('input', (event) => {
