@@ -6,6 +6,7 @@
     <title>Web MIDI Note Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tmi.js/dist/tmi.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -32,9 +33,15 @@
         <p class="text-gray-400 mb-6">Plays random notes and chords from the selected scale.</p>
 
         <div class="space-y-4 mb-6">
-            <div>
-                <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
-                <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+            <div class="flex space-x-4">
+                <div class="w-1/2">
+                    <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
+                    <select id="deviceSelector" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"></select>
+                </div>
+                <div class="w-1/2">
+                    <label for="twitchChannel" class="block text-sm font-medium text-gray-400 text-left">Twitch Channel</label>
+                    <input type="text" id="twitchChannel" placeholder="e.g., your_channel" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mt-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
             </div>
             <div class="flex space-x-4">
                 <div class="w-1/2">
@@ -97,6 +104,7 @@
         const octaveValue = document.getElementById('octaveValue');
         const bpmSlider = document.getElementById('bpmSlider');
         const bpmValue = document.getElementById('bpmValue');
+        const twitchChannelInput = document.getElementById('twitchChannel');
 
         let midiAccess = null;
         let midiOutput = null;
@@ -104,6 +112,7 @@
         let isPlaying = false;
         let lastNotePlayed = null;
         let currentVelocity = 100;
+        let twitchClient = null;
 
         // --- Music Theory Data ---
         const KEYS = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
@@ -288,21 +297,15 @@
             const rootNoteAbsoluteIndex = playableNotes.indexOf(lastNotePlayed);
             if (rootNoteAbsoluteIndex === -1) return;
 
-            // Find the scale degree (e.g., 0 for root, 1 for second) of the last lead note
             const rootNoteDegree = rootNoteAbsoluteIndex % fullScaleNoteCount;
-            
-            // Get only the notes from the bottom-most octave
             const bottomOctaveNotes = playableNotes.slice(0, fullScaleNoteCount);
-
-            // Build the chord using notes from the bottom octave, based on the lead note's degree
             const chordRoot = bottomOctaveNotes[rootNoteDegree];
             const chordThird = bottomOctaveNotes[(rootNoteDegree + 2) % fullScaleNoteCount];
             const chordFifth = bottomOctaveNotes[(rootNoteDegree + 4) % fullScaleNoteCount];
             
             const chordNotes = [chordRoot, chordThird, chordFifth].filter(n => n !== undefined);
-            if (chordNotes.length < 3) return; // Safeguard
+            if (chordNotes.length < 3) return;
 
-            // 80% chance for a 4-beat duration, 20% for 2-4 beats.
             const beats = Math.random() < 0.8 ? 4 : 2 + Math.random() * 2;
             const durationMs = (60 / bpmSlider.value * 1000) * beats;
             const noteOffTime = window.performance.now() + durationMs;
@@ -343,9 +346,20 @@
             toggleButton.textContent = 'Stop Playing';
             toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
+            twitchChannelInput.disabled = true;
 
             intervalIds.forEach(clearInterval);
             intervalIds = [];
+
+            // Connect to Twitch Chat
+            const channelName = twitchChannelInput.value.trim();
+            if (channelName && typeof tmi !== 'undefined') {
+                twitchClient = new tmi.Client({ channels: [channelName] });
+                twitchClient.on('message', (channel, tags, message, self) => {
+                    leadLoop(); // Trigger a note attempt on every chat message
+                });
+                twitchClient.connect().catch(console.error);
+            }
 
             const currentBpm = bpmSlider.value;
             const checkedLeadBoxes = document.querySelectorAll('#beatSelector input[type="checkbox"]:checked');
@@ -366,6 +380,13 @@
             toggleButton.textContent = 'Start Playing';
             toggleButton.classList.remove('bg-red-600', 'hover:bg-red-700');
             toggleButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            twitchChannelInput.disabled = false;
+
+            if (twitchClient) {
+                twitchClient.disconnect();
+                twitchClient = null;
+            }
+
             intervalIds.forEach(clearInterval);
             intervalIds = [];
         }
@@ -399,5 +420,4 @@
     </script>
 </body>
 </html>
-
 
