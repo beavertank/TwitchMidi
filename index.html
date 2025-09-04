@@ -38,23 +38,27 @@
             </div>
              <div>
                 <label class="block text-sm font-medium text-gray-400 text-left mb-2">MIDI Channel</label>
+                <div class="flex items-center mb-2 text-sm">
+                    <input type="checkbox" id="omniChannel" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500">
+                    <label for="omniChannel">Omni (All Channels)</label>
+                </div>
                 <div id="channelSelector" class="grid grid-cols-8 gap-x-2 gap-y-2 text-sm text-left">
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="0" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="1" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
-                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="1" checked class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>1</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="2" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>2</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="3" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>3</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="4" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>4</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="5" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>5</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="6" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>6</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="7" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>7</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="8" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>8</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="9" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>9</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="10" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>10</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="11" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>11</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="12" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>12</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="13" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>13</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="14" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>14</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="15" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>15</label></div>
+                    <div class="flex items-center"><input type="checkbox" name="midiChannel" value="16" class="mr-2 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"><label>16</label></div>
                 </div>
             </div>
             <div>
@@ -282,7 +286,8 @@
 
             // Send the note on all selected channels with a slight delay between each
             selectedChannelBoxes.forEach((box, index) => {
-                const channel = parseInt(box.value, 10);
+                const channelValue = parseInt(box.value, 10);
+                const channel = channelValue - 1; // Convert 1-16 to 0-15 for MIDI protocol
                 
                 // This tiny delay can help prevent MIDI message flooding on sensitive devices.
                 setTimeout(() => {
@@ -375,13 +380,37 @@
 
         const channelSelector = document.getElementById('channelSelector');
         const channelCheckBoxes = channelSelector.querySelectorAll('input[type="checkbox"]');
+        const omniCheckbox = document.getElementById('omniChannel');
 
-        // Removed the event listener that enforced single-channel selection
-        // Now multiple channels can be selected at once.
+        omniCheckbox.addEventListener('change', () => {
+            const isChecked = omniCheckbox.checked;
+            channelCheckBoxes.forEach(box => {
+                box.checked = isChecked;
+                box.disabled = isChecked;
+            });
+            // If omni is turned off, re-enable channels and default to channel 1
+            if (!isChecked) {
+                const channel1 = channelSelector.querySelector('input[value="1"]');
+                if (channel1) {
+                    channel1.checked = true;
+                }
+            }
+        });
+
+        channelSelector.addEventListener('change', (event) => {
+            if (event.target.name === 'midiChannel') {
+                // Uncheck omni if an individual channel is toggled
+                omniCheckbox.checked = false;
+                
+                // Ensure at least one channel is always selected. If not, re-check the one just changed.
+                const oneIsChecked = Array.from(channelCheckBoxes).some(box => box.checked);
+                if (!oneIsChecked) {
+                    event.target.checked = true;
+                }
+            }
+        });
 
     </script>
 </body>
 </html>
-
-
 
