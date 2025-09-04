@@ -211,12 +211,8 @@
             if (!midiOutput) return;
 
             // Get selected MIDI channel (0-15)
-            const selectedChannelBox = document.querySelector('#channelSelector input[type="checkbox"]:checked');
-            const channel = selectedChannelBox ? parseInt(selectedChannelBox.value, 10) : 0; // Default to channel 0 (MIDI ch 1)
-
-            // Calculate channel-specific MIDI commands
-            const NOTE_ON = 0x90 + channel;
-            const NOTE_OFF = 0x80 + channel;
+            const selectedChannelBoxes = document.querySelectorAll('#channelSelector input[type="checkbox"]:checked');
+            if (selectedChannelBoxes.length === 0) return; // Don't play if no channel is selected
 
             // --- Velocity Change Logic ---
             // 30% chance to change velocity
@@ -267,8 +263,14 @@
 
             const randomDuration = 125 + Math.random() * 3875; // Random length: 1/8s to 4s
 
-            midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
-            midiOutput.send([NOTE_OFF, noteToPlay, 0], window.performance.now() + randomDuration);
+            // Send the note on all selected channels
+            selectedChannelBoxes.forEach(box => {
+                const channel = parseInt(box.value, 10);
+                const NOTE_ON = 0x90 + channel;
+                const NOTE_OFF = 0x80 + channel;
+                midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
+                midiOutput.send([NOTE_OFF, noteToPlay, 0], window.performance.now() + randomDuration);
+            });
         }
 
         function playLoop() {
@@ -352,21 +354,8 @@
         const channelSelector = document.getElementById('channelSelector');
         const channelCheckBoxes = channelSelector.querySelectorAll('input[type="checkbox"]');
 
-        channelSelector.addEventListener('change', (event) => {
-            // If the checkbox was checked, uncheck all others to enforce single selection
-            if (event.target.checked) {
-                channelCheckBoxes.forEach(box => {
-                    if (box !== event.target) {
-                        box.checked = false;
-                    }
-                });
-            }
-            // If the user unchecks the last checked box, re-check it. Ensures one is always selected.
-            const oneIsChecked = Array.from(channelCheckBoxes).some(box => box.checked);
-            if (!oneIsChecked) {
-                event.target.checked = true;
-            }
-        });
+        // Removed the event listener that enforced single-channel selection
+        // Now multiple channels can be selected at once.
 
     </script>
 </body>
