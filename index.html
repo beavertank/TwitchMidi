@@ -260,7 +260,7 @@
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
             
             const currentBpm = bpmSlider.value;
-            const intervalTime = (60 / currentBpm * 1000) / 8; // 1/8th of a beat
+            const intervalTime = (60 / currentBpm * 1000) / 3; // 1/3rd of a beat
             intervalId = setInterval(playLoop, intervalTime);
         }
 
@@ -304,7 +304,7 @@
             // If we are currently playing, we need to restart the interval with the new BPM
             if (isPlaying) {
                 clearInterval(intervalId);
-                const intervalTime = (60 / newBpm * 1000) / 8;
+                const intervalTime = (60 / newBpm * 1000) / 3;
                 intervalId = setInterval(playLoop, intervalTime);
             }
         });
