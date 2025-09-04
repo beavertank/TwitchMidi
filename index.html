@@ -29,8 +29,8 @@
 <body class="bg-gray-900 text-white flex items-center justify-center h-screen">
 
     <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center border border-gray-700">
-        <h1 class="text-3xl font-bold mb-2 text-blue-400">Twitch plays MIDI</h1>
-        <p class="text-gray-400 mb-6">Twitch chat reactive webMIDI player with options.</p>
+        <h1 class="text-3xl font-bold mb-2 text-blue-400">A Twitch reactive WebMIDI Player</h1>
+        <p class="text-gray-400 mb-6">Plays notes based on Twitch chat activity and selected options.</p>
 
         <div class="space-y-4 mb-6">
             <div class="flex space-x-4">
@@ -271,31 +271,74 @@
             }
 
             const noteToPlay = candidateNotes[Math.floor(Math.random() * candidateNotes.length)];
-            lastNotePlayed = noteToPlay;
 
-            const randomDuration = 125 + Math.random() * 3875;
-            const noteOffTime = window.performance.now() + randomDuration;
+            // --- Arpeggio or Single Note Logic ---
+            if (Math.random() <= 0.05) { // 5% chance for an arpeggio
+                playArpeggio(noteToPlay, selectedChannels, currentVelocity);
+            } else { // 95% chance for a single note
+                lastNotePlayed = noteToPlay;
+                const randomDuration = 125 + Math.random() * 3875;
+                const noteOffTime = window.performance.now() + randomDuration;
 
-            // --- Glide (Portamento) Logic ---
-            const applyGlide = Math.random() <= 0.20;
-            const portamentoTime = applyGlide ? 127 : 0; // CC 5: 100% or 0%
-            const portamentoSwitch = applyGlide ? 127 : 0; // CC 65: On or Off
+                // --- Glide (Portamento) Logic ---
+                const applyGlide = Math.random() <= 0.20;
+                const portamentoTime = applyGlide ? 127 : 0; // CC 5: 100% or 0%
+                const portamentoSwitch = applyGlide ? 127 : 0; // CC 65: On or Off
 
-            selectedChannels.forEach((channelValue) => {
-                const channel = channelValue - 1;
-                // MIDI CC messages are sent on channel 0xB0 to 0xBF (176-191)
-                const CONTROL_CHANGE = 176 + channel;
-                const NOTE_ON = 144 + channel;
-                const NOTE_OFF = 128 + channel;
+                selectedChannels.forEach((channelValue) => {
+                    const channel = channelValue - 1;
+                    const CONTROL_CHANGE = 176 + channel;
+                    const NOTE_ON = 144 + channel;
+                    const NOTE_OFF = 128 + channel;
 
-                // Send Portamento Control Change messages *before* the Note On message
-                midiOutput.send([CONTROL_CHANGE, 65, portamentoSwitch]); // Portamento On/Off
-                midiOutput.send([CONTROL_CHANGE, 5, portamentoTime]);   // Portamento Time
+                    midiOutput.send([CONTROL_CHANGE, 65, portamentoSwitch]);
+                    midiOutput.send([CONTROL_CHANGE, 5, portamentoTime]);
+                    midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
+                    midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
+                });
+            }
+        }
+        
+        function playArpeggio(startNote, channels, velocity) {
+            if (!midiOutput) return;
 
-                // Send the note itself
-                midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
-                midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
+            const playableNotes = getPlayableNotes();
+            let startIndex = playableNotes.indexOf(startNote);
+            if (startIndex === -1) return;
+
+            const direction = Math.random() < 0.5 ? 1 : -1; // 1 for up, -1 for down
+            const arpeggioNotes = [startNote];
+
+            for (let i = 1; i < 5; i++) {
+                let nextIndex = startIndex + (i * direction);
+                // Handle wrapping around the scale for continuous arpeggios
+                while (nextIndex < 0) {
+                    nextIndex += playableNotes.length;
+                }
+                nextIndex %= playableNotes.length;
+                arpeggioNotes.push(playableNotes[nextIndex]);
+            }
+
+            const bpm = bpmSlider.value;
+            // Duration of a 16th note triplet in milliseconds
+            const tripletDuration = (60 / bpm * 1000 / 4) * (2 / 3);
+            const startTime = window.performance.now();
+
+            arpeggioNotes.forEach((note, index) => {
+                const noteOnTime = startTime + (index * tripletDuration);
+                const noteOffTime = noteOnTime + tripletDuration; 
+
+                channels.forEach(channelValue => {
+                    const channel = channelValue - 1;
+                    const NOTE_ON = 144 + channel;
+                    const NOTE_OFF = 128 + channel;
+
+                    midiOutput.send([NOTE_ON, note, velocity], noteOnTime);
+                    midiOutput.send([NOTE_OFF, note, 0], noteOffTime);
+                });
             });
+
+            lastNotePlayed = arpeggioNotes[arpeggioNotes.length - 1];
         }
 
         function playChord() {
