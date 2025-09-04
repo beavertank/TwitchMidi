@@ -257,6 +257,11 @@
         function playLeadNote() {
             if (!midiOutput) return;
 
+            // 5% chance to trigger a chord along with the lead note
+            if (Math.random() < 0.05) {
+                playChord();
+            }
+
             const selectedChannels = getSelectedChannels('leadChannelSelector');
             if (selectedChannels.length === 0) return;
 
@@ -528,7 +533,4 @@
     </script>
 </body>
 </html>
-
-
-
 
