@@ -73,7 +73,7 @@
 
         let midiAccess = null;
         let midiOutput = null;
-        let timeoutId = null;
+        let intervalId = null;
         let isPlaying = false;
 
         // --- MIDI constants ---
@@ -206,17 +206,12 @@
         }
 
         function playLoop() {
-            if (!isPlaying) return; // Stop if the flag is false
+            if (!isPlaying) return; // Safety check, should be stopped by clearInterval
 
-            playNote();
-
-            // Calculate next delay with weighting towards the longer end of the range
-            const skewedRand = Math.max(Math.random(), Math.random()); // Skews distribution towards 1
-            const minDelay = 62.5; // 1/16 of a second
-            const maxDelay = 5000;  // 5 seconds
-            const delay = minDelay + skewedRand * (maxDelay - minDelay); // Maps to 62.5ms-5000ms, biased towards 5000ms
-
-            timeoutId = setTimeout(playLoop, delay);
+            // 20% chance to play a note on each check
+            if (Math.random() <= 0.20) {
+                 playNote();
+            }
         }
 
         function startPlaying() {
@@ -226,7 +221,7 @@
             toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
             
-            playLoop();
+            intervalId = setInterval(playLoop, 300);
         }
 
         function stopPlaying() {
@@ -236,8 +231,8 @@
             toggleButton.classList.remove('bg-red-600', 'hover:bg-red-700');
             toggleButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
 
-            clearTimeout(timeoutId);
-            timeoutId = null;
+            clearInterval(intervalId);
+            intervalId = null;
         }
 
         // --- Event Listeners ---
@@ -265,6 +260,7 @@
     </script>
 </body>
 </html>
+
 
 
 
