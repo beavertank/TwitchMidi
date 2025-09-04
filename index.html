@@ -199,7 +199,7 @@
 
             const randomIndex = Math.floor(Math.random() * playableNotes.length);
             const noteToPlay = playableNotes[randomIndex];
-            const randomDuration = 500 + Math.random() * 2500; // Random length: 0.5s to 3s
+            const randomDuration = 125 + Math.random() * 3875; // Random length: 1/8s to 4s
 
             midiOutput.send([NOTE_ON, noteToPlay, VELOCITY]);
             midiOutput.send([NOTE_OFF, noteToPlay, 0], window.performance.now() + randomDuration);
@@ -210,11 +210,11 @@
 
             playNote();
 
-            // Calculate next delay with weighting towards the middle of the range
-            const rand1 = Math.random();
-            const rand2 = Math.random();
-            const avgRand = (rand1 + rand2) / 2; // Creates a triangular distribution centered at 0.5
-            const delay = 500 + avgRand * 2500; // Maps to 500ms-3000ms, biased towards 1750ms
+            // Calculate next delay with weighting towards the longer end of the range
+            const skewedRand = Math.max(Math.random(), Math.random()); // Skews distribution towards 1
+            const minDelay = 62.5; // 1/16 of a second
+            const maxDelay = 5000;  // 5 seconds
+            const delay = minDelay + skewedRand * (maxDelay - minDelay); // Maps to 62.5ms-5000ms, biased towards 5000ms
 
             timeoutId = setTimeout(playLoop, delay);
         }
@@ -265,6 +265,7 @@
     </script>
 </body>
 </html>
+
 
 
 
