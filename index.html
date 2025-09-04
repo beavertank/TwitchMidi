@@ -278,15 +278,20 @@
             lastNotePlayed = noteToPlay; // Update the last played note
 
             const randomDuration = 125 + Math.random() * 3875; // Random length: 1/8s to 4s
+            const noteOffTime = window.performance.now() + randomDuration;
 
-            // Send the note on all selected channels
-            selectedChannelBoxes.forEach(box => {
+            // Send the note on all selected channels with a slight delay between each
+            selectedChannelBoxes.forEach((box, index) => {
                 const channel = parseInt(box.value, 10);
-                visualizeNote(channel); // Visual feedback for which channel is playing
-                const NOTE_ON = 0x90 + channel;
-                const NOTE_OFF = 0x80 + channel;
-                midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
-                midiOutput.send([NOTE_OFF, noteToPlay, 0], window.performance.now() + randomDuration);
+                
+                // This tiny delay can help prevent MIDI message flooding on sensitive devices.
+                setTimeout(() => {
+                    visualizeNote(channel); // Visual feedback for which channel is playing
+                    const NOTE_ON = 0x90 + channel;
+                    const NOTE_OFF = 0x80 + channel;
+                    midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
+                    midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
+                }, index * 5); // Stagger each channel's message by 5ms
             });
         }
 
@@ -377,5 +382,6 @@
     </script>
 </body>
 </html>
+
 
 
