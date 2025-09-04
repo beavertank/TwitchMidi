@@ -362,14 +362,50 @@
             const rootNoteAbsoluteIndex = playableNotes.indexOf(lastNotePlayed);
             if (rootNoteAbsoluteIndex === -1) return;
 
+            // --- New Chord Generation Logic ---
+
+            // 1. Determine chord structure
+            const isFourNoteChord = Math.random() < 0.10; // 10% chance for a 4-note chord
+            const isDiminished = Math.random() < 0.05; // 5% chance for a diminished chord
+            const isInverted = Math.random() < 0.40; // 40% chance for an inversion
+
+            // 2. Build the diatonic chord from the scale
             const rootNoteDegree = rootNoteAbsoluteIndex % fullScaleNoteCount;
             const bottomOctaveNotes = playableNotes.slice(0, fullScaleNoteCount);
+
             const chordRoot = bottomOctaveNotes[rootNoteDegree];
             const chordThird = bottomOctaveNotes[(rootNoteDegree + 2) % fullScaleNoteCount];
             const chordFifth = bottomOctaveNotes[(rootNoteDegree + 4) % fullScaleNoteCount];
             
-            const chordNotes = [chordRoot, chordThird, chordFifth].filter(n => n !== undefined);
-            if (chordNotes.length < 3) return;
+            let chordNotes = [chordRoot, chordThird, chordFifth];
+
+            if (isFourNoteChord) {
+                const chordSeventh = bottomOctaveNotes[(rootNoteDegree + 6) % fullScaleNoteCount];
+                chordNotes.push(chordSeventh);
+            }
+            
+            chordNotes = chordNotes.filter(n => n !== undefined);
+            if (chordNotes.length < 3) return; // Not enough notes for a valid chord
+
+            // 3. Apply diminished quality if selected
+            if (isDiminished && chordNotes.length >= 3) {
+                // Flatten the fifth to create a diminished sound
+                chordNotes[2] = chordNotes[2] - 1; 
+            }
+
+            // 4. Apply inversion if selected
+            if (isInverted && chordNotes.length > 1) {
+                const inversionType = Math.floor(Math.random() * (chordNotes.length - 1)) + 1;
+                for (let i = 0; i < inversionType; i++) {
+                    // Take the bottom note and move it up an octave
+                    const bottomNote = chordNotes.shift();
+                    if(bottomNote !== undefined) {
+                       chordNotes.push(bottomNote + 12);
+                    }
+                }
+            }
+
+            // --- End New Chord Logic ---
 
             const beats = Math.random() < 0.8 ? 4 : 2 + Math.random() * 2;
             const durationMs = (60 / bpmSlider.value * 1000) * beats;
@@ -383,8 +419,10 @@
                 const NOTE_OFF = 128 + channel;
 
                 chordNotes.forEach(note => {
-                    midiOutput.send([NOTE_ON, note, chordVelocity]);
-                    midiOutput.send([NOTE_OFF, note, 0], noteOffTime);
+                    if (note !== undefined && note <= 127) {
+                        midiOutput.send([NOTE_ON, note, chordVelocity]);
+                        midiOutput.send([NOTE_OFF, note, 0], noteOffTime);
+                    }
                 });
             });
         }
@@ -490,6 +528,7 @@
     </script>
 </body>
 </html>
+
 
 
 
