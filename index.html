@@ -230,9 +230,14 @@
         function playNote() {
             if (!midiOutput) return;
 
-            // Get selected MIDI channel (0-15)
+            // Step 1: Get all currently checked MIDI channel checkboxes.
             const selectedChannelBoxes = document.querySelectorAll('#channelSelector input[type="checkbox"]:checked');
-            if (selectedChannelBoxes.length === 0) return; // Don't play if no channel is selected
+            
+            // If no channels are selected, do nothing.
+            if (selectedChannelBoxes.length === 0) {
+                console.log("No MIDI channels selected. Skipping note.");
+                return;
+            }
 
             // --- Velocity Change Logic ---
             // 30% chance to change velocity
@@ -271,7 +276,6 @@
             let candidateNotes = playableNotes;
             if (lastNotePlayed !== null) {
                 const filteredNotes = playableNotes.filter(note => Math.abs(note - lastNotePlayed) <= 7);
-                // If the filter results in no notes (e.g., at the edge of the range), use the full list to avoid getting stuck.
                 if (filteredNotes.length > 0) {
                     candidateNotes = filteredNotes;
                 }
@@ -284,19 +288,28 @@
             const randomDuration = 125 + Math.random() * 3875; // Random length: 1/8s to 4s
             const noteOffTime = window.performance.now() + randomDuration;
 
-            // Send the note on all selected channels with a slight delay between each
-            selectedChannelBoxes.forEach((box, index) => {
+            // Step 2: Loop through each selected channel checkbox and send the note.
+            // This is where the channel information is used.
+            selectedChannelBoxes.forEach((box) => {
+                // Get the channel number (1-16) from the checkbox's 'value' attribute.
                 const channelValue = parseInt(box.value, 10);
-                const channel = channelValue - 1; // Convert 1-16 to 0-15 for MIDI protocol
                 
-                // This tiny delay can help prevent MIDI message flooding on sensitive devices.
-                setTimeout(() => {
-                    visualizeNote(channel); // Visual feedback for which channel is playing
-                    const NOTE_ON = 0x90 + channel;
-                    const NOTE_OFF = 0x80 + channel;
-                    midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
-                    midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
-                }, index * 5); // Stagger each channel's message by 5ms
+                // Convert the channel number to the 0-15 range required by the MIDI protocol.
+                const channel = channelValue - 1; 
+                
+                // Flash the border to give visual feedback for this specific channel.
+                visualizeNote(channel);
+                
+                // Construct the MIDI "Note On" and "Note Off" messages.
+                // The channel number is added to the base command (0x90 for Note On, 0x80 for Note Off).
+                const NOTE_ON = 0x90 + channel;
+                const NOTE_OFF = 0x80 + channel;
+                
+                // Send the "Note On" message immediately.
+                midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
+                
+                // Schedule the "Note Off" message to be sent after the random duration.
+                midiOutput.send([NOTE_OFF, noteToPlay, 0], noteOffTime);
             });
         }
 
