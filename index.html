@@ -295,15 +295,17 @@
                 const channelValue = parseInt(box.value, 10);
                 
                 // Convert the channel number to the 0-15 range required by the MIDI protocol.
-                //const channel = channelValue - 1; 
+                const channel = channelValue - 1; 
                 
                 // Flash the border to give visual feedback for this specific channel.
-                visualizeNote(channelValue);
+                visualizeNote(channel);
                 
                 // Construct the MIDI "Note On" and "Note Off" messages.
-                // The channel number is added to the base command (0x90 for Note On, 0x80 for Note Off).
-                const NOTE_ON = 0x90 + channelValue;
-                const NOTE_OFF = 0x80 + channelValue;
+                // The MIDI standard defines the "Note On" command for a channel by adding the channel number (0-15)
+                // to the base value of 144 (Hex 0x90). Similarly, "Note Off" is 128 (Hex 0x80) + channel.
+                // We use decimal values here for clarity; the result is the same as using hex.
+                const NOTE_ON = 144 + channel;
+                const NOTE_OFF = 128 + channel;
                 
                 // Send the "Note On" message immediately.
                 midiOutput.send([NOTE_ON, noteToPlay, currentVelocity]);
@@ -426,4 +428,5 @@
     </script>
 </body>
 </html>
+
 
