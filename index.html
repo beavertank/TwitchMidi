@@ -19,17 +19,27 @@
 
     <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-700">
         <h1 class="text-3xl font-bold mb-2 text-blue-400">Web MIDI Player</h1>
-        <p class="text-gray-400 mb-6">Plays a random note from the selected scale every second.</p>
-
-        <div class="mb-6 text-left">
-            <label for="scaleSelect" class="block text-gray-400 text-sm font-medium mb-2">Choose a Scale:</label>
-            <select id="scaleSelect" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                <!-- Scale options will be populated by JavaScript -->
-            </select>
-        </div>
+        <p class="text-gray-400 mb-6">Plays a random note every second based on the range below.</p>
 
         <div id="status" class="mb-6 p-4 rounded-lg bg-gray-700 text-gray-300">
             Initializing...
+        </div>
+
+        <div class="space-y-4 mb-6">
+            <div>
+                <label for="noteCountSlider" class="block text-sm font-medium text-gray-400 text-left">Notes in Range</label>
+                <div class="flex items-center space-x-4">
+                    <input id="noteCountSlider" type="range" min="1" max="12" value="3" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    <span id="noteCountValue" class="font-mono text-blue-300 w-8 text-right">3</span>
+                </div>
+            </div>
+            <div>
+                <label for="octaveCountSlider" class="block text-sm font-medium text-gray-400 text-left">Octaves</label>
+                <div class="flex items-center space-x-4">
+                    <input id="octaveCountSlider" type="range" min="1" max="3" value="3" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    <span id="octaveCountValue" class="font-mono text-blue-300 w-8 text-right">3</span>
+                </div>
+            </div>
         </div>
 
         <button id="toggleButton" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 btn-glow">
@@ -40,59 +50,20 @@
     <script>
         const statusDiv = document.getElementById('status');
         const toggleButton = document.getElementById('toggleButton');
-        const scaleSelect = document.getElementById('scaleSelect');
+        const noteCountSlider = document.getElementById('noteCountSlider');
+        const noteCountValue = document.getElementById('noteCountValue');
+        const octaveCountSlider = document.getElementById('octaveCountSlider');
+        const octaveCountValue = document.getElementById('octaveCountValue');
 
         let midiOutput = null;
         let noteInterval = null;
         let isPlaying = false;
-
-        // --- Scale Definitions ---
-        // An object containing various musical scales as arrays of MIDI note numbers.
-        const scales = {
-            // Major Scales
-            "C Major":    [60, 62, 64, 65, 67, 69, 71, 72],
-            "G Major":    [55, 57, 59, 60, 62, 64, 66, 67],
-            "D Major":    [62, 64, 66, 67, 69, 71, 73, 74],
-            "A Major":    [57, 59, 61, 62, 64, 66, 68, 69],
-            "E Major":    [64, 66, 68, 69, 71, 73, 75, 76],
-            "B Major":    [59, 61, 63, 64, 66, 68, 70, 71],
-            "F# Major":   [66, 68, 70, 71, 73, 75, 77, 78],
-            "C# Major":   [61, 63, 65, 66, 68, 70, 72, 73],
-            "F Major":    [65, 67, 69, 70, 72, 74, 76, 77],
-            "Bb Major":   [58, 60, 62, 63, 65, 67, 69, 70],
-            "Eb Major":   [63, 65, 67, 68, 70, 72, 74, 75],
-            "Ab Major":   [56, 58, 60, 61, 63, 65, 67, 68],
-            // Natural Minor Scales
-            "A Minor":    [57, 59, 60, 62, 64, 65, 67, 69],
-            "E Minor":    [64, 66, 67, 69, 71, 72, 74, 76],
-            "B Minor":    [59, 61, 62, 64, 66, 67, 69, 71],
-            "F# Minor":   [66, 68, 69, 71, 73, 74, 76, 78],
-            "C# Minor":   [61, 63, 64, 66, 68, 69, 71, 73],
-            "G# Minor":   [56, 58, 59, 61, 63, 64, 66, 68],
-            "D# Minor":   [63, 65, 66, 68, 70, 71, 73, 75],
-            "A# Minor":   [58, 60, 61, 63, 65, 66, 68, 70],
-            "D Minor":    [62, 64, 65, 67, 69, 70, 72, 74],
-            "G Minor":    [55, 57, 58, 60, 62, 63, 65, 67],
-            "C Minor":    [60, 62, 63, 65, 67, 68, 70, 72],
-            "F Minor":    [65, 67, 68, 70, 72, 73, 75, 77],
-        };
 
         // --- MIDI constants ---
         const NOTE_ON = 0x90;  // 144
         const NOTE_OFF = 0x80; // 128
         const VELOCITY = 100;   // How hard the note is played (0-127)
         const NOTE_DURATION = 200; // milliseconds
-
-        // Populates the dropdown menu with scale options
-        function populateScales() {
-            for (const scaleName in scales) {
-                const option = document.createElement('option');
-                option.value = scaleName;
-                option.textContent = scaleName;
-                scaleSelect.appendChild(option);
-            }
-        }
-        populateScales();
 
         // Function to update the status message
         function updateStatus(message, isError = false) {
@@ -148,25 +119,23 @@
         function playNote() {
             if (!midiOutput) return;
 
-            // Get the selected scale from the dropdown
-            const selectedScaleName = scaleSelect.value;
-            const currentScale = scales[selectedScaleName];
+            const noteCount = parseInt(noteCountSlider.value, 10);
+            const octaveCount = parseInt(octaveCountSlider.value, 10);
+            const baseNote = 60; // C4
 
-            if (!currentScale) {
-                console.error(`Scale not found: ${selectedScaleName}`);
-                return;
-            }
-            
-            // Pick a random note from the selected scale
-            const note = currentScale[Math.floor(Math.random() * currentScale.length)];
+            // Calculate the total number of unique notes possible based on sliders
+            const totalNoteRange = (octaveCount - 1) * 12 + noteCount;
+
+            // Get a random offset within that range
+            const randomNoteOffset = Math.floor(Math.random() * totalNoteRange);
+
+            const note = baseNote + randomNoteOffset;
 
             // Send Note On message
             midiOutput.send([NOTE_ON, note, VELOCITY]);
-            console.log(`Note On: ${note} (Scale: ${selectedScaleName})`);
 
             // Schedule Note Off message
             midiOutput.send([NOTE_OFF, note, 0], window.performance.now() + NOTE_DURATION);
-            console.log(`Note Off: ${note} (scheduled)`);
         }
 
         function startPlaying() {
@@ -175,7 +144,6 @@
             toggleButton.textContent = 'Stop Playing';
             toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
-            scaleSelect.disabled = true; // Disable dropdown while playing
             
             // Play a note immediately, then start the interval
             playNote();
@@ -188,7 +156,6 @@
             toggleButton.textContent = 'Start Playing';
             toggleButton.classList.remove('bg-red-600', 'hover:bg-red-700');
             toggleButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            scaleSelect.disabled = false; // Re-enable dropdown when stopped
 
             clearInterval(noteInterval);
             noteInterval = null;
@@ -200,6 +167,14 @@
             } else {
                 startPlaying();
             }
+        });
+
+        noteCountSlider.addEventListener('input', (event) => {
+            noteCountValue.textContent = event.target.value;
+        });
+
+        octaveCountSlider.addEventListener('input', (event) => {
+            octaveCountValue.textContent = event.target.value;
         });
 
     </script>
