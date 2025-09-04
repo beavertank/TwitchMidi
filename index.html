@@ -69,6 +69,13 @@
                 </div>
             </div>
             <div>
+                <label for="intervalSlider" class="block text-sm font-medium text-gray-400 text-left">Max Interval (Semitones)</label>
+                <div class="flex items-center space-x-4">
+                    <input id="intervalSlider" type="range" min="1" max="24" value="7" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    <span id="intervalValue" class="font-mono text-blue-300 w-8 text-right">7</span>
+                </div>
+            </div>
+            <div>
                 <label for="bpmSlider" class="block text-sm font-medium text-gray-400 text-left">BPM</label>
                 <div class="flex items-center space-x-4">
                     <input id="bpmSlider" type="range" min="30" max="300" value="120" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
@@ -109,6 +116,8 @@
         const modeSelector = document.getElementById('modeSelector');
         const octaveSlider = document.getElementById('octaveSlider');
         const octaveValue = document.getElementById('octaveValue');
+        const intervalSlider = document.getElementById('intervalSlider');
+        const intervalValue = document.getElementById('intervalValue');
         const bpmSlider = document.getElementById('bpmSlider');
         const bpmValue = document.getElementById('bpmValue');
         const probabilitySlider = document.getElementById('probabilitySlider');
@@ -278,7 +287,8 @@
 
             let candidateNotes = playableNotes;
             if (lastNotePlayed !== null) {
-                const filteredNotes = playableNotes.filter(note => Math.abs(note - lastNotePlayed) <= 7);
+                const maxInterval = parseInt(intervalSlider.value, 10);
+                const filteredNotes = playableNotes.filter(note => Math.abs(note - lastNotePlayed) <= maxInterval);
                 if (filteredNotes.length > 0) {
                     candidateNotes = filteredNotes;
                 }
@@ -513,6 +523,10 @@
 
         octaveSlider.addEventListener('input', (event) => {
             octaveValue.textContent = event.target.value;
+        });
+        
+        intervalSlider.addEventListener('input', (event) => {
+            intervalValue.textContent = event.target.value;
         });
 
         function restartPlayerIfNeeded() {
