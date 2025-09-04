@@ -31,10 +31,6 @@
         <h1 class="text-3xl font-bold mb-2 text-blue-400">Web MIDI Player</h1>
         <p class="text-gray-400 mb-6">Plays random notes from the selected scale.</p>
 
-        <div id="status" class="mb-6 p-4 rounded-lg bg-gray-700 text-gray-300">
-            Initializing...
-        </div>
-
         <div class="space-y-4 mb-6">
             <div>
                 <label for="deviceSelector" class="block text-sm font-medium text-gray-400 text-left">MIDI Device</label>
@@ -105,7 +101,6 @@
     </div>
 
     <script>
-        const statusDiv = document.getElementById('status');
         const toggleButton = document.getElementById('toggleButton');
         const deviceSelector = document.getElementById('deviceSelector');
         const keySelector = document.getElementById('keySelector');
@@ -154,17 +149,12 @@
 
 
         // --- MIDI Logic ---
-        function updateStatus(message, isError = false) {
-            statusDiv.textContent = message;
-            statusDiv.className = `mb-6 p-4 rounded-lg ${isError ? 'bg-red-900 text-red-300' : 'bg-gray-700 text-gray-300'}`;
-        }
-
         if (navigator.requestMIDIAccess) {
-            updateStatus('Requesting MIDI access...');
             navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
         } else {
-            updateStatus('Web MIDI API is not supported in this browser.', true);
+            console.error('Web MIDI API is not supported in this browser.');
             toggleButton.disabled = true;
+            toggleButton.textContent = 'MIDI Not Supported';
         }
 
         function populateDeviceDropdown() {
@@ -191,13 +181,13 @@
                 const currentSelection = outputDevices.find(d => d.id === deviceSelector.value);
                 midiOutput = currentSelection || outputDevices[0];
                 
-                updateStatus(`Ready. Select a device and press Start.`);
                 toggleButton.disabled = false;
 
             } else {
                 stopPlaying();
-                updateStatus('No MIDI output devices found.', true);
+                console.error('No MIDI output devices found.');
                 toggleButton.disabled = true;
+                toggleButton.textContent = 'No Devices Found';
                 midiOutput = null;
             }
         }
@@ -212,8 +202,9 @@
         }
 
         function onMIDIFailure(msg) {
-            updateStatus(`Failed to get MIDI access: ${msg}`, true);
+            console.error(`Failed to get MIDI access: ${msg}`);
             toggleButton.disabled = true;
+            toggleButton.textContent = 'MIDI Access Failed';
         }
         
         function playNote() {
