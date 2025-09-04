@@ -55,6 +55,13 @@
                     <span id="octaveValue" class="font-mono text-blue-300 w-8 text-right">3</span>
                 </div>
             </div>
+            <div>
+                <label for="bpmSlider" class="block text-sm font-medium text-gray-400 text-left">BPM</label>
+                <div class="flex items-center space-x-4">
+                    <input id="bpmSlider" type="range" min="30" max="300" value="120" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    <span id="bpmValue" class="font-mono text-blue-300 w-8 text-right">120</span>
+                </div>
+            </div>
         </div>
 
         <button id="toggleButton" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 btn-glow">
@@ -70,6 +77,8 @@
         const modeSelector = document.getElementById('modeSelector');
         const octaveSlider = document.getElementById('octaveSlider');
         const octaveValue = document.getElementById('octaveValue');
+        const bpmSlider = document.getElementById('bpmSlider');
+        const bpmValue = document.getElementById('bpmValue');
 
         let midiAccess = null;
         let midiOutput = null;
@@ -250,7 +259,9 @@
             toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
             
-            intervalId = setInterval(playLoop, 300);
+            const currentBpm = bpmSlider.value;
+            const intervalTime = (60 / currentBpm * 1000) / 8; // 1/8th of a beat
+            intervalId = setInterval(playLoop, intervalTime);
         }
 
         function stopPlaying() {
@@ -284,6 +295,18 @@
 
         octaveSlider.addEventListener('input', (event) => {
             octaveValue.textContent = event.target.value;
+        });
+
+        bpmSlider.addEventListener('input', (event) => {
+            const newBpm = event.target.value;
+            bpmValue.textContent = newBpm;
+
+            // If we are currently playing, we need to restart the interval with the new BPM
+            if (isPlaying) {
+                clearInterval(intervalId);
+                const intervalTime = (60 / newBpm * 1000) / 8;
+                intervalId = setInterval(playLoop, intervalTime);
+            }
         });
 
     </script>
