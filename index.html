@@ -131,6 +131,10 @@
         let lastNotePlayed = null;
         let currentVelocity = 100;
         let twitchClient = null;
+        let leadModWheelValue = 0;
+        let chordModWheelValue = 0;
+        let leadModWheelDirection = 1; // 1 for up, -1 for down
+        let chordModWheelDirection = 1;
 
         // --- Music Theory Data ---
         const KEYS = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
@@ -263,12 +267,58 @@
             }
         }
 
+        function updateModWheel(currentValue, lastDirection) {
+            let newDirection = lastDirection;
+            // Determine direction of change
+            if (currentValue <= 0) {
+                newDirection = 1; // Must go up from the bottom
+            } else if (currentValue >= 127) {
+                newDirection = -1; // Must go down from the top
+            } else {
+                // 80% chance to keep the same direction
+                if (Math.random() > 0.80) {
+                    newDirection *= -1; // Reverse direction
+                }
+            }
+
+            const changeAmount = Math.floor(Math.random() * (25 - 10 + 1)) + 10;
+            let newValue = currentValue + (changeAmount * newDirection);
+
+            // Clamp the value to the valid MIDI range 0-127
+            newValue = Math.max(0, Math.min(127, newValue));
+
+            return { newValue, newDirection };
+        }
+
         function playLeadNote() {
             if (!midiOutput) return;
 
             // 5% chance to trigger a chord along with the lead note
             if (Math.random() < 0.05) {
                 playChord();
+            }
+
+            // --- Mod Wheel Logic ---
+            // Lead Channel Mod Wheel: 5% chance to change
+            if (Math.random() < 0.05) {
+                const result = updateModWheel(leadModWheelValue, leadModWheelDirection);
+                leadModWheelValue = result.newValue;
+                leadModWheelDirection = result.newDirection;
+                getSelectedChannels('leadChannelSelector').forEach(ch => {
+                    // CC 1 is the Mod Wheel
+                    midiOutput.send([176 + (ch - 1), 1, leadModWheelValue]);
+                });
+            }
+
+            // Chord Channel Mod Wheel: 5% chance to change
+            if (Math.random() < 0.05) {
+                const result = updateModWheel(chordModWheelValue, chordModWheelDirection);
+                chordModWheelValue = result.newValue;
+                chordModWheelDirection = result.newDirection;
+                getSelectedChannels('chordChannelSelector').forEach(ch => {
+                    // CC 1 is the Mod Wheel
+                    midiOutput.send([176 + (ch - 1), 1, chordModWheelValue]);
+                });
             }
 
             const selectedChannels = getSelectedChannels('leadChannelSelector');
@@ -462,6 +512,21 @@
             isPlaying = true;
             lastNotePlayed = null;
             currentVelocity = 100;
+            
+            // Reset Mod Wheel values and send initial CC message to set them to 0
+            leadModWheelValue = 0;
+            chordModWheelValue = 0;
+            leadModWheelDirection = 1;
+            chordModWheelDirection = 1;
+            if (midiOutput) {
+                getSelectedChannels('leadChannelSelector').forEach(ch => {
+                    midiOutput.send([176 + (ch - 1), 1, 0]); // CC 1 (Mod Wheel) to 0
+                });
+                getSelectedChannels('chordChannelSelector').forEach(ch => {
+                    midiOutput.send([176 + (ch - 1), 1, 0]); // CC 1 (Mod Wheel) to 0
+                });
+            }
+
             toggleButton.textContent = 'Stop Playing';
             toggleButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             toggleButton.classList.add('bg-red-600', 'hover:bg-red-700');
