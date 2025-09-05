@@ -12,8 +12,8 @@ Chrome will work out of the box, although it will prompt you on your first usage
 
 Firefox will require a little tweaking: 
 >go to **about:config**
->find **dom.webmidi.enabled** and **dom.security.featurePolicy.header.enabled**
->make sure they're both set to "true"
+>>find **dom.webmidi.enabled** and **dom.security.featurePolicy.header.enabled**<br>
+>>make sure they're both set to "true"
 
 If you changed either one you will need to completely restart Firefox for the changes to take effect.
 
