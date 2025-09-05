@@ -519,6 +519,9 @@
             leadModWheelDirection = 1;
             chordModWheelDirection = 1;
             if (midiOutput) {
+                // Send MIDI Start command (System Real-Time Message)
+                midiOutput.send([0xFA]); 
+
                 getSelectedChannels('leadChannelSelector').forEach(ch => {
                     midiOutput.send([176 + (ch - 1), 1, 0]); // CC 1 (Mod Wheel) to 0
                 });
@@ -561,6 +564,12 @@
         function stopPlaying() {
             if (!isPlaying) return;
             isPlaying = false;
+            
+            // Send MIDI Stop command (System Real-Time Message)
+            if (midiOutput) {
+                midiOutput.send([0xFC]);
+            }
+
             toggleButton.textContent = 'Start Playing';
             toggleButton.classList.remove('bg-red-600', 'hover:bg-red-700');
             toggleButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
