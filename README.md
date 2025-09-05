@@ -2,13 +2,20 @@
 
 An effort to make a twitch-chat reactive midi note generator for generative background music that doesn't suck (*too much*).
 
+Inspired by instafluff's ComfyJazz (https://github.com/instafluff/ComfyJazz) but with midi note production rather than self-contained music generation.
+
 ## Usage
 
 You can host this yourself, or just go to https://beavertank.github.io/TwitchMidi/ and use it from there.
 
 Chrome will work out of the box, although it will prompt you on your first usage to give it access to MIDI devices. You'll need to grant this if you want to use it. 
 
-Firefox will require a little tweaking, you first have to go to **about:config** then you have to find **dom.webmidi.enabled** and **dom.security.featurePolicy.header.enabled** and make sure they're both set to "true". If you changed either one you will need to completely restart Firefox for the changes to take effect.
+Firefox will require a little tweaking: 
+>go to **about:config**
+>find **dom.webmidi.enabled** and **dom.security.featurePolicy.header.enabled**
+>make sure they're both set to "true"
+
+If you changed either one you will need to completely restart Firefox for the changes to take effect.
 
 For hardware (ie external) synths they should appear in the dropdown MIDI Device menu. Select the one you want, and the channel you want to use for Lead and/or Chord notes, and you're good to go. (a note: for the Chord notes to function properly whatever the data is going to needs to be polyphonic or paraphonic with the abililty to play 3 or 4 notes simultaneously)
 
